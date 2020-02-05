@@ -22,63 +22,50 @@
 
   <div class="row">
   <div class="col s12" id="filter">
-    <div class="flex-container">
-    <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        activities
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#">Activity1</a> 
-      </div>
 
-      <br>
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          Food Type
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Food Type 1</a>
+
+    <div class="container">
+      <a class='dropdown-trigger btn' href='#' data-target='dpnActivities'>Activities</a>
+    
+      <!-- Dropdown Structure -->
+      <ul id='dpnActivities' class='dropdown-content'>
+        <li><a href="#!">one</a></li>
+        <li><a href="#!">two</a></li>
+      </ul>
+    </div>
+
+     <br>
+
+        <div class="container">
+          <a class='dropdown-trigger btn' href='#' data-target='dpnFoodType'>Food Type</a>    
+          <!-- Dropdown Structure -->
+          <ul id='dpnFoodType' class='dropdown-content'>
+            <li><a href="#!">one</a></li>
+            <li><a href="#!">two</a></li>
+          </ul>
         </div>
 
-
-<!-- Dropdown -->
-<div class="container">
-<a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Drop Me!</a>
-
-<!-- Dropdown Structure -->
-<ul id='dropdown1' class='dropdown-content'>
-  <li><a href="#!">one</a></li>
-  <li><a href="#!">two</a></li>
-  <li class="divider" tabindex="-1"></li>
-  <li><a href="#!">three</a></li>
-  <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
-  <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
-</ul>
-</div>
-
-<!-- //Dropdown -->
-
-
         <br>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Radius
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">1 mile</a>
-            <a class="dropdown-item" href="#">5 miles</a>
-            <a class="dropdown-item" href="#">10 miles</a>
-            <a class="dropdown-item" href="#">15 miles</a>
-            <a class="dropdown-item" href="#">20 miles</a>
-          </div>
+                <div class="container">
+                  <a class='dropdown-trigger btn' href='#' data-target='dpnRadius'>Radius</a>
+                  <!-- Dropdown Structure -->
+                  <ul id='dpnRadius' class='dropdown-content'>
+                    <li><a href="#!">1</a></li>
+                    <li><a href="#!">5</a></li>
+                    <li><a href="#!">10</a></li>
+                    <li><a href="#!">15</a></li>
+                    <li><a href="#!">20</a></li>
+                  </ul>
+                </div>
+
+       </div>
 
      <div class="row">
        <div class="col l12">
-         <input type="text" id="city-name" placeholder="Please Enter A City">
-         <button class="btn waves-effect waves-light blue-grey darken-1" type="submit" name="action" id="search">Search
+         <input type="text" id="cityName" 
+         placeholder="Please Enter A City">
+        <input type="text" id="zipCode" placeholder="Please Enter in Zip Code">
+         <button class="btn waves-effect waves-light blue-grey darken-1" type="submit" name="action" id="search">
            <i class="material-icons right">search</i>
          </button>
        </div>
