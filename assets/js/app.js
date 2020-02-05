@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.getElementById('search').addEventListener('click', event => {
   event.preventDefault()
-  let city = document.getElementById('city-name').value
+  let city = document.getElementById('cityName').value
   console.log('ping')
   console.log(city)
 
