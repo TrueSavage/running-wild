@@ -11,56 +11,78 @@
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-  <title>Document</title>
+<title>UCI Eats</title>
 </head>
 <body>
- <header><img src="assets/images/ucieats_logo.jpg"></header>
-     
-
-
+<header><img src="assets/images/ucieats_logo.jpg"><img src="assets/images/ucieats_name.jpg"></header>
+  <br>
   <div class="container">
-
   <div class="row">
   <div class="col s12" id="filter">
+  <div class="container">
+    <br>
+    <label for="planDate">The Fun Day</label>
+    <input type="text" class="datepicker" id="planDate">
+    <br>
+      <div class="input-field col s12" id="ArtsAndEntertainment">
+          <select multiple id="mArtsAndEntertainment">
+            <option value="" disabled selected>Choose from Arts and Entertainment</option>
+          </select>
+          <label>Arts and Entertainment</label>
+      </div>
 
+      <div class="input-field col s12" id="Events">
+          <select multiple id="mEvents">
+            <option value="" disabled selected>Choose from Events</option>
+          </select>
+          <label>Events</label>
+      </div>
 
-    <div class="container">
-      <a class='dropdown-trigger btn' href='#' data-target='dpnActivities'>Activities</a>
-    
-      <!-- Dropdown Structure -->
-      <ul id='dpnActivities' class='dropdown-content'>
-        <li><a href="#!">one</a></li>
-        <li><a href="#!">two</a></li>
-      </ul>
+      <div class="input-field col s12" id="ShopAndService">
+          <select multiple id="mShopAndService">
+            <option value="" disabled selected>Choose from Shop and Service</option>
+          </select>
+          <label>Shop & Service</label>
+      </div>
+
+      <div class="input-field col s12" id="OutdoorsAndRecreation">
+          <select multiple id="mOutdoorsAndRecreation">
+          <option value="" disabled selected>Choose from Outdoors & Recreation</option>
+          </select>
+          <label>Outdoor & Recreation</label>
+      </div>
+  </div>
+
+  <div class="input-field col s12" id="FoodOptions">
+    <select multiple id="mFoodOptions">
+      <option value="" disabled selected>Choose from Food Options</option>
+    </select>
+    <label>Food Options</label>
     </div>
 
-     <br>
+    <div class="input-field col s12" id="Travel & Transport">
+      <select multiple id="mTravelAndTransport">
+        <option value="" disabled selected>Choose from Travel & Transport</option>
+      </select>
+      <label>Travel & Transport</label>
+    </div>
 
-        <div class="container">
-          <a class='dropdown-trigger btn' href='#' data-target='dpnFoodType'>Food Type</a>    
-          <!-- Dropdown Structure -->
-          <ul id='dpnFoodType' class='dropdown-content'>
-            <li><a href="#!">one</a></li>
-            <li><a href="#!">two</a></li>
-          </ul>
-        </div>
+      <div class="container">
+      <div class="input-field col s12">
+        <select id="selectRadius">
+           <option value="" disabled selected>Choose a radius</option>
+          <option value="1">1</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
+        <label>Radius</label>
+      </div>
 
-        <br>
-                <div class="container">
-                  <a class='dropdown-trigger btn' href='#' data-target='dpnRadius'>Radius</a>
-                  <!-- Dropdown Structure -->
-                  <ul id='dpnRadius' class='dropdown-content'>
-                    <li><a href="#!">1</a></li>
-                    <li><a href="#!">5</a></li>
-                    <li><a href="#!">10</a></li>
-                    <li><a href="#!">15</a></li>
-                    <li><a href="#!">20</a></li>
-                  </ul>
-                </div>
-
-       </div>
-
-     <div class="row">
+      </div>
+    </div>
+    <div class="row">
        <div class="col l12">
          <input type="text" id="cityName" 
          placeholder="Please Enter A City">
@@ -74,6 +96,7 @@
     </div>
   </div>
   </div>
+
   <div class="row">
   <div class="col s12" id="weather">Weather Results</div>
   </div>
@@ -106,6 +129,8 @@
 <script src=./assets/js/app.js></script>
 <!-- Compiled and minified JavaScript -->
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
