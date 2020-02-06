@@ -82,6 +82,7 @@ const searchItems = () => {
   let searchURL = fourSQMainURL + 'search?near=' + geoCode + category + rad + '&' + urlFourSQClientInfo
 }
 
+
 const getDropDowns = () => {
   fetch(fourSQCatURL)
     .then(r => r.json())
@@ -133,6 +134,10 @@ const appendToMaterialSelect = (element, dropdown) => {
 }
 getDropDowns()
 
+const kelvinToF = (valNum) => {
+  valNum = parseFloat(valNum);
+  return (((valNum - 273.15) * 1.8) + 32).toFixed(2);
+}
 
 
 //This is based off passing through a venue object from 4 square
@@ -223,7 +228,7 @@ const renderForecastCard = (cardData) => {
   newForecastCard.innerHTML = `<div class="card forecastCard">
   <div class="card-body">
   <div class="card-title"><h4>${forecastDay}  </h4> <img src='https://openweathermap.org/img/wn/${weather[0].icon}@2x.png'> </div>
-      <br> Temperature: ${main.temp} &#8457;
+      <br> Temperature: ${kelvinToF(main.temp)} &#8457;
       <br>Humidity: ${main.humidity}% 
       <br>Wind Speed: ${wind.speed} MPH 
       </div>
