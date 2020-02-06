@@ -20,6 +20,14 @@ let fiveDayForecast
 let fiveDay = []
 let browserGeolocation = ''
 let geoCode = ''
+let selectArtsAndEntertainment = document.getElementById('mArtsAndEntertainment')
+let selectEvents = document.getElementById('mEvents')
+let selectShopAndService = document.getElementById('mShopAndService')
+let selectOutdoorsAndRecreation = document.getElementById('mOutdoorsAndRecreation')
+let selectFoodOptions = document.getElementById('mFoodOptions')
+let selectTravelAndTransport = document.getElementById('mTravelAndTransport')
+
+
 const fourSQGeo = () => {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(fourSQGeoStore)
@@ -48,9 +56,28 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 const searchItems = () => {
+  let instanceArtsAndEntertainment = M.FormSelect.getInstance(selectArtsAndEntertainment);
+  let ArtsAndEntertainmentIds = instanceArtsAndEntertainment.getSelectedValues()
 
-  let rad = document.getElementById('dpnRadius').value
-  let categoryId = document.getElementById('mFoodOptions').value
+  let instanceEvents = M.FormSelect.getInstance(selectEvents)
+  let EventsIds = instanceEvents.getSelectedValues()
+
+  let instanceShopAndService = M.FormSelect.getInstance(selectShopAndService);
+  let ShopAndServiceIds = instanceShopAndService.getSelectedValues()
+
+  let instanceOutdoorsAndRecreation = M.FormSelect.getInstance(selectOutdoorsAndRecreation)
+  let OutdoorsAndRecreationIds = instanceOutdoorsAndRecreation.getSelectedValues()
+
+  let instanceTravelAndTransport = M.FormSelect.getInstance(selectTravelAndTransport)
+  let TravelAndTransportIds = instanceTravelAndTransport.getSelectedValues()
+
+  let instanceFoodOption = M.FormSelect.getInstance(selectFoodOptions);
+  let foodIds = instanceFoodOption.getSelectedValues()
+
+  let radInstance = M.FormSelect.getInstance(document.getElementById('selectRadius'))
+
+  let rad = radInstance.el.selectedOptions[0].value
+  let categoryId = foodIds
   let category = '&categoryId=' + categoryId
   let searchURL = fourSQMainURL + 'search?near=' + geoCode + category + rad + '&' + urlFourSQClientInfo
 }
@@ -59,13 +86,6 @@ const getDropDowns = () => {
   fetch(fourSQCatURL)
     .then(r => r.json())
     .then(data => {
-      let selectArtsAndEntertainment = document.getElementById('mArtsAndEntertainment')
-
-      let selectEvents = document.getElementById('mEvents')
-      let selectShopAndService = document.getElementById('mShopAndService')
-      let selectOutdoorsAndRecreation = document.getElementById('mOutdoorsAndRecreation')
-      let selectFoodOptions = document.getElementById('mFoodOptions')
-      let selectTravelAndTransport = document.getElementById('mTravelAndTransport')
 
       let { response: anotherResponse } = data
       let { categories } = anotherResponse
@@ -73,16 +93,6 @@ const getDropDowns = () => {
       categories.forEach((element) => {
         switch (element.id) {
           case activityArtsAndEntertainmentId:
-            // let valueId = 0
-            // let categoryArray = element.categories.slice();
-            // categoryArray.forEach((item) => {
-            //   let option = document.createElement('option')
-            //   option.textContent = item.name
-            //   option.id = item.id
-            //   option.value = item.id
-            //   valueId++
-            //   selectArtsAndEntertainment.append(option)
-            // })
             appendToMaterialSelect(element, selectArtsAndEntertainment)
             break
           case activityEventId:
@@ -104,9 +114,6 @@ const getDropDowns = () => {
       })
       let select = document.querySelectorAll('select');
       let selectInstances = M.FormSelect.init(select, {});
-      // categories.forEach((element) => {
-      //   let { name, pluralName, shortName, icon } = element
-      // })
 
     })
     .catch(e => console.error(e))
@@ -232,29 +239,6 @@ document.getElementById('search').addEventListener('click', event => {
   searchByCity(city, urlWeather)
 
   searchItems()
-  // let urlWeather = `http://api.openweathermap.org/data/2.5/weather?q=${city}&&units=imperial&APPID=3c181a9afca27b382c5754bb9706b06f`
-  // fetch(urlWeather)
-  //   .then(r => r.json())
-  //   .then(weather => {
-  //     //console.log(weather)
-  //     document.getElementById('weather').textContent = Math.floor(weather.main.temp) + " " + String.fromCharCode(176) + "F"
-
-  //   })
-  //   .catch(e => console.error(e))
-
-
-  let fiveDayForecast = `http://api.openweathermap.org/data/2.5/forecast?q=${city},us&units=imperial&APPID=3c181a9afca27b382c5754bb9706b06f`
-
-
-
-  fetch(fiveDayForecast)
-    .then(r => r.json())
-    .then(forecast => {
-      console.log(forecast)
-      console.log(forecast.list[0])
-    })
-
-
 
 })
 
