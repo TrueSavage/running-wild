@@ -132,6 +132,7 @@ const createVenueCard = (venueItem) => {
   let { address, city, state, postalCode, country } = location
 
   let venueCard = document.createElement('div')
+  venueCard.classList.add("venueCard")
   venueCard.innerHTML =
     `  <div class="row">
        <div class="col s12 m6">

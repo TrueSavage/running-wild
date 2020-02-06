@@ -39,3 +39,8 @@ img {
 .cardsFoodOptions{
   background-color:lightsteelblue;
 }
+
+.venueCard{
+width: 50%;
+display:inline-block;
+}
