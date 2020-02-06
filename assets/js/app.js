@@ -19,7 +19,7 @@ const fourSQCatURL = fourSQMainURL + fourSQPathCat + `id=${activityArtsAndEntert
 let fiveDayForecast
 let fiveDay = []
 let browserGeolocation = ''
-let geoCode = ''
+let geoCode = localStorage.getItem('geoCode') || '33.68687203696294,-117.788172854784'
 let selectArtsAndEntertainment = document.getElementById('mArtsAndEntertainment')
 let selectEvents = document.getElementById('mEvents')
 let selectShopAndService = document.getElementById('mShopAndService')
@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 const searchItems = () => {
+
   let instanceArtsAndEntertainment = M.FormSelect.getInstance(selectArtsAndEntertainment);
   let ArtsAndEntertainmentIds = instanceArtsAndEntertainment.getSelectedValues()
 
@@ -77,9 +78,77 @@ const searchItems = () => {
   let radInstance = M.FormSelect.getInstance(document.getElementById('selectRadius'))
 
   let rad = radInstance.el.selectedOptions[0].value
-  let categoryId = foodIds
-  let category = '&categoryId=' + categoryId
-  let searchURL = fourSQMainURL + 'search?near=' + geoCode + category + rad + '&' + urlFourSQClientInfo
+
+  let activitiesTargetDiv = document.getElementById('activities')
+  let foodTargetDiv = document.getElementById('foodType')
+
+  //Pull and Display
+  getVenuesTopTen('Arts and Entertainment', ArtsAndEntertainmentIds, rad, 'cardsArtAndEntertainment', activitiesTargetDiv)
+
+  getVenuesTopTen('Events', EventsIds, rad, 'cardsEvents', activitiesTargetDiv)
+
+  getVenuesTopTen('Outdoors and Recreation', OutdoorsAndRecreationIds, rad, 'cardsOutdoorsAndRecreation', activitiesTargetDiv)
+
+  getVenuesTopTen('Travel and Transport', TravelAndTransportIds, rad, 'cardsTravelAndTransport', activitiesTargetDiv)
+
+  getVenuesTopTen('Food Options', foodIds, rad, 'cardsFoodOptions', foodTargetDiv)
+
+}
+
+const getVenuesTopTen = (display, criteriaId, rad, divClass, resultDiv) => {
+
+
+  //criteriaId comes in as an array of id's and have to convert array to string
+  let categoryList = criteriaId.join()
+  let category = '&categoryId=' + categoryList
+  let searchURL = fourSQMainURL + 'search?near=' + geoCode + category + '&radius=' + rad + '&' + urlFourSQClientInfo
+
+
+  fetch(searchURL)
+    .then(r => r.json())
+    .then(data => {
+      console.log(data)
+      let { response } = data
+      let { venues: venueArray } = response
+      let div = document.createElement('div')
+      div.classList.add(divClass)
+
+      venueArray.forEach((item) => {
+        let newCard = createVenueCard(item)
+        div.append(newCard)
+      })
+      resultDiv.append(div)
+    }
+    )
+    .catch(e => console.error(e))
+
+}
+
+
+//This is based off passing through a venue object from 4 square
+const createVenueCard = (venueItem) => {
+  let { id, name, location, categories, referralId, hasPerk } = venueItem
+
+  let { address, city, state, postalCode, country } = location
+
+  let venueCard = document.createElement('div')
+  venueCard.innerHTML =
+    `  <div class="row">
+       <div class="col s12 m6">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">${name}</span>
+          address: ${address}<br>
+          city: ${city}<br>
+          state:${state}<br>
+          zip: ${postalCode}<br>
+          country: ${country}
+        </div>        
+      </div>
+    </div>
+  </div>
+`
+  return venueCard
 }
 
 
@@ -91,6 +160,7 @@ const getDropDowns = () => {
       let { response: anotherResponse } = data
       let { categories } = anotherResponse
 
+      console.log(categories)
       categories.forEach((element) => {
         switch (element.id) {
           case activityArtsAndEntertainmentId:
@@ -139,39 +209,13 @@ const kelvinToF = (valNum) => {
   return (((valNum - 273.15) * 1.8) + 32).toFixed(2);
 }
 
-
-//This is based off passing through a venue object from 4 square
-const createVenueCard = (venueItem) => {
-  let { id, name, location, categories, referralId, hasPerk } = venueItem
-
-  let { address, city, state, postalCode, country } = location
-
-  let venueCard = document.createElement('div')
-  venueCard.innerHTML =
-    `  <div class="row">
-       <div class="col s12 m6">
-      <div class="card blue-grey darken-1">
-        <div class="card-content white-text">
-          <span class="card-title">${name}</span>
-          address: ${address}<br>
-          city: ${city}<br>
-          state:${state}<br>
-          zip: ${postalCode}<br>
-          country: ${country}
-        </div>        
-      </div>
-    </div>
-  </div>
-`
-  return venueCard
-}
-
 const searchByCity = (city, urlWeather) => {
   fetch(urlWeather)
     .then(r => r.json())
     .then(response => {
       let { coord, weather, base, main, visibility, wind, clouds, dt, sys, timezone, id, name, cod } = response
       geoCode = `${coord.lat},${coord.lon}`
+      localStorage.setItem('geoCode', geoCode)
       getFiveDayForecastByCity(coord.lat, coord.lon)
     })
     .catch(e => { console.error(e) })
