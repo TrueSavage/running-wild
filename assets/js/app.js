@@ -38,7 +38,11 @@ document.addEventListener('DOMContentLoaded', function () {
   let select = document.querySelectorAll('select');
   let selectInstances = M.FormSelect.init(select, {});
   let collapsible = document.querySelectorAll('.collapsible');
-  let collapsibleInstances = M.Collapsible.init(elems, {});
+  let collapsibleInstances = M.Collapsible.init(collapsible, {});
+
+  var dateChooser = document.querySelectorAll('.datepicker');
+  var dateInstances = M.Datepicker.init(dateChooser, {});
+
 
 });
 
@@ -94,7 +98,7 @@ const getDropDowns = () => {
       // categories.forEach((element) => {
       //   let { name, pluralName, shortName, icon } = element
       // })
-      console.log(categories)
+
     })
     .catch(e => console.error(e))
 }
@@ -112,6 +116,8 @@ const appendToMaterialSelect = (element, dropdown) => {
   })
 }
 getDropDowns()
+
+
 
 //This is based off passing through a venue object from 4 square
 const createVenueCard = (venueItem) => {
