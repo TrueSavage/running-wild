@@ -5,6 +5,17 @@ header {
 
 img {
   height: 70px;
- margin: auto;
- padding: auto;
+  margin: auto;
+  padding: auto;
+}
+
+.forecastLabel {
+  display: inline-block;
+  font-weight: bold;
+  padding: 2px;
+}
+
+.forecastCard {
+  display: inline-block;
+  width: 20%;
 }

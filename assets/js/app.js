@@ -16,9 +16,10 @@ const travelAndTransport = '4d4b7105d754a06379d81259'
 
 const fourSQCatURL = fourSQMainURL + fourSQPathCat + `id=${activityArtsAndEntertainmentId}&` + urlFourSQClientInfo
 
-
+let fiveDayForecast
+let fiveDay = []
 let browserGeolocation = ''
-
+let geoCode = ''
 const fourSQGeo = () => {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(fourSQGeoStore)
@@ -45,6 +46,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 });
+
+const searchItems = () => {
+
+  let rad = document.getElementById('dpnRadius').value
+  let categoryId = document.getElementById('mFoodOptions').value
+  let category = '&categoryId=' + categoryId
+  let searchURL = fourSQMainURL + 'search?near=' + geoCode + category + rad + '&' + urlFourSQClientInfo
+}
 
 const getDropDowns = () => {
   fetch(fourSQCatURL)
@@ -145,12 +154,84 @@ const createVenueCard = (venueItem) => {
   return venueCard
 }
 
+const searchByCity = (city, urlWeather) => {
+  fetch(urlWeather)
+    .then(r => r.json())
+    .then(response => {
+      let { coord, weather, base, main, visibility, wind, clouds, dt, sys, timezone, id, name, cod } = response
+      geoCode = `${coord.lat},${coord.lon}`
+      getFiveDayForecastByCity(coord.lat, coord.lon)
+    })
+    .catch(e => { console.error(e) })
+
+}
+const getFiveDayForecastByCity = (lat, long) => {
+  let forecastURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&appid=3c181a9afca27b382c5754bb9706b06f`
+  fetch(forecastURL)
+    .then(r => r.json())
+    .then(response => {
+
+      if (response !== undefined || response != null) {
+        fiveDayForecast = response
+        displayForecast()
+      }
+    })
+    .catch(e => { console.error(e) })
+
+}
+
+const displayForecast = () => {
+  if (fiveDayForecast !== undefined) {
+    fiveDay = []
+    let { list: items } = fiveDayForecast
+    for (let i = 0; i < items.length; i++) {
+      let dayTime = items[i].dt_txt
+      let currentHour = moment(dayTime).format('HH')
+      // since its a 5 day hourly forecast we will look at the weather at 12noon
+
+      if (currentHour === '12') {
+        fiveDay.push(items[i])
+      }
+
+    }
+    let container = document.getElementById
+      ('weather')
+    container.innerHTML = ""
+
+    let cardHTML = "<div class='forecastLabel'>5-day forecast</div>: <br>"
+    for (let j = 0; j < fiveDay.length; j++) {
+      let newCard = renderForecastCard(fiveDay[j])
+      cardHTML += newCard.innerHTML
+    }
+    container.innerHTML = cardHTML
+  }
+}
+
+const renderForecastCard = (cardData) => {
+  let newForecastCard = document.createElement('div')
+
+  let { dt, main, weather, clouds, wind, sys, dt_txt } = cardData
+  let forecastDay = moment(dt_txt).format('MM/DD/YYYY')
+
+  newForecastCard.innerHTML = `<div class="card forecastCard">
+  <div class="card-body">
+  <div class="card-title"><h4>${forecastDay}  </h4> <img src='https://openweathermap.org/img/wn/${weather[0].icon}@2x.png'> </div>
+      <br> Temperature: ${main.temp} &#8457;
+      <br>Humidity: ${main.humidity}% 
+      <br>Wind Speed: ${wind.speed} MPH 
+      </div>
+      </div>`
+  return newForecastCard
+}
 
 
 document.getElementById('search').addEventListener('click', event => {
   event.preventDefault()
   let city = document.getElementById('cityName').value
+  let urlWeather = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=3c181a9afca27b382c5754bb9706b06f`
+  searchByCity(city, urlWeather)
 
+  searchItems()
   // let urlWeather = `http://api.openweathermap.org/data/2.5/weather?q=${city}&&units=imperial&APPID=3c181a9afca27b382c5754bb9706b06f`
   // fetch(urlWeather)
   //   .then(r => r.json())
