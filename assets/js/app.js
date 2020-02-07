@@ -20,6 +20,7 @@ const fourSQCatURL = fourSQMainURL + fourSQPathCat + `id=${activityArtsAndEntert
 let fiveDayForecast
 let fiveDay = []
 let browserGeolocation = ''
+let venueItems = []
 let geoCode = localStorage.getItem('geoCode') || '33.68687203696294,-117.788172854784'
 let selectArtsAndEntertainment = document.getElementById('mArtsAndEntertainment')
 let selectEvents = document.getElementById('mEvents')
@@ -53,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var dateChooser = document.querySelectorAll('.datepicker');
   var dateInstances = M.Datepicker.init(dateChooser, {});
 
-
 });
 
 const searchItem = () => {
@@ -85,42 +85,43 @@ const searchItem = () => {
 
   //Pull and Display
   if (ArtsAndEntertainmentIds.length > 0 && ArtsAndEntertainmentIds[0] !== '') {
-    getVenuesTopTen('Arts and Entertainment', ArtsAndEntertainmentIds, rad, 'cardsArtAndEntertainment', activitiesTargetDiv)
+    getVenues('Arts and Entertainment', ArtsAndEntertainmentIds, rad, 'cardsArtAndEntertainment', activitiesTargetDiv, 'activitiesPicked')
   }
   if (EventsIds.length > 0 && EventsIds[0] !== '') {
-    getVenuesTopTen('Events', EventsIds, rad, 'cardsEvents', activitiesTargetDiv)
+    getVenues('Events', EventsIds, rad, 'cardsEvents', activitiesTargetDiv, 'activitiesPicked')
   }
   if (OutdoorsAndRecreationIds.length > 0 && OutdoorsAndRecreationIds[0] !== '') {
-    getVenuesTopTen('Outdoors and Recreation', OutdoorsAndRecreationIds, rad, 'cardsOutdoorsAndRecreation', activitiesTargetDiv)
+    getVenues('Outdoors and Recreation', OutdoorsAndRecreationIds, rad, 'cardsOutdoorsAndRecreation', activitiesTargetDiv, 'activitiesPicked')
   }
   if (TravelAndTransportIds.length > 0 && TravelAndTransportIds[0] !== '') {
-    getVenuesTopTen('Travel and Transport', TravelAndTransportIds, rad, 'cardsTravelAndTransport', activitiesTargetDiv)
+    getVenues('Travel and Transport', TravelAndTransportIds, rad, 'cardsTravelAndTransport', activitiesTargetDiv, 'activitiesPicked')
   }
   if (foodIds.length > 0 && foodIds[0] !== '') {
-    getVenuesTopTen('Food Options', foodIds, rad, 'cardsFoodOptions', foodTargetDiv)
+    getVenues('Food Options', foodIds, rad, 'cardsFoodOptions', foodTargetDiv, 'foodTypePicked')
   }
 }
 
-const getVenuesTopTen = (display, criteriaId, rad, divClass, resultDiv) => {
-
+const getVenues = (display, criteriaId, rad, divClass, resultDiv, targetList) => {
 
   //criteriaId comes in as an array of id's and have to convert array to string
   let categoryList = criteriaId.join()
   let category = '&categoryId=' + categoryList
   let searchURL = fourSQMainURL + 'search?ll=' + geoCode + category + '&radius=' + rad + '&' + urlFourSQClientInfo
-
-  console.log(searchURL)
+  resultDiv.innerHTML = ''
   fetch(searchURL)
     .then(r => r.json())
     .then(data => {
-      console.log(data)
+
       let { response } = data
       let { venues: venueArray } = response
       let div = document.createElement('div')
       div.classList.add(divClass)
+      let subTitle = document.createElement('div')
+      subTitle.innerHTML = `<h2>${display}</h2>`
+      div.append(subTitle)
 
       venueArray.forEach((item) => {
-        let newCard = createVenueCard(item)
+        let newCard = createVenueCard(item, display, targetList)
         div.append(newCard)
       })
       resultDiv.append(div)
@@ -130,34 +131,37 @@ const getVenuesTopTen = (display, criteriaId, rad, divClass, resultDiv) => {
 
 }
 
-
 //This is based off passing through a venue object from 4 square
-const createVenueCard = (venueItem) => {
+const createVenueCard = (venueItem, display, targetList) => {
   let { id, name, location, categories, referralId, hasPerk } = venueItem
 
-  let { address, city, state, postalCode, country } = location
-
+  let { address, city, state, postalCode, country, formattedAddress } = location
+  let formattedAddressStr = ''
+  formattedAddress.forEach((element) => {
+    formattedAddressStr += element + '<br>'
+  })
   let venueCard = document.createElement('div')
   venueCard.classList.add("venueCard")
+  let venueElement = { venueId: id, name: name, formattedAddressStr: formattedAddressStr, formattedAddress: formattedAddress, heading: display, targetList: targetList }
+  venueItems.push(venueElement)
   venueCard.innerHTML =
     `  <div class="row">
        <div class="col s12 m6">
       <div class="card blue-grey darken-1">
         <div class="card-content white-text">
           <span class="card-title">${name}</span>
-          address: ${address}<br>
-          city: ${city}<br>
-          state:${state}<br>
-          zip: ${postalCode}<br>
-          country: ${country}
-        </div>        
+          ${formattedAddressStr}
+        </div>
+        <div class="card-action">
+          <button class="btn waves-effect waves-light addVenue" value='${id}'>Add Venue</button>
+        </div>
+
       </div>
     </div>
   </div>
 `
   return venueCard
 }
-
 
 const getDropDowns = () => {
   fetch(fourSQCatURL)
@@ -167,7 +171,6 @@ const getDropDowns = () => {
       let { response: anotherResponse } = data
       let { categories } = anotherResponse
 
-      console.log(categories)
       categories.forEach((element) => {
         switch (element.id) {
           case activityArtsAndEntertainmentId:
@@ -226,8 +229,8 @@ const searchByCity = (city, urlWeather) => {
       getFiveDayForecastByCity(coord.lat, coord.lon)
     })
     .catch(e => { console.error(e) })
-
 }
+
 const getFiveDayForecastByCity = (lat, long) => {
   let forecastURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&appid=3c181a9afca27b382c5754bb9706b06f`
   fetch(forecastURL)
@@ -287,7 +290,6 @@ const renderForecastCard = (cardData) => {
   return newForecastCard
 }
 
-
 document.getElementById('search').addEventListener('click', event => {
   event.preventDefault()
   let city = document.getElementById('cityName').value
@@ -300,5 +302,29 @@ document.getElementById('search').addEventListener('click', event => {
   }
 })
 
-
-
+document.addEventListener('click', event => {
+  if (event.target.classList.contains('addVenue')) {
+    event.target.parentNode.parentNode.remove()
+    let addVenueId = event.target.value
+    let addVenue
+    venueItems.forEach((element) => {
+      if (element.venueId === addVenueId) {
+        addVenue = element
+      }
+    })
+    let venueElem = document.createElement('div')
+    venueElem.className = 'card'
+    venueElem.innerHTML = `
+            <div class="card-content">
+              <h3>${addVenue.name}</h3>
+              <h4>${addVenue.formattedAddressStr}</h4>              
+            </div>
+            <div class="card-action">
+              <button class="btn waves-effect waves-light removeVenue">Remove Venue</button>
+            </div>
+        `
+    document.getElementById(addVenue.targetList).append(venueElem)
+  } else if (event.target.classList.contains('removeVenue')) {
+    event.target.parentNode.parentNode.remove()
+  }
+})
