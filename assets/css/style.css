@@ -12,10 +12,35 @@ img {
 .forecastLabel {
   display: inline-block;
   font-weight: bold;
-  padding: 2px;
+  padding: 0px;
 }
 
 .forecastCard {
   display: inline-block;
   width: 20%;
+}
+
+.cardsArtsAndEntertainment {
+  background-color: lavender;
+}
+
+.cardsEvents {
+  background-color: lightblue;
+}
+
+.cardsOutdoorsAndRecreation {
+  background-color: lightgreen;
+}
+
+.cardsTravelAndTransport {
+  background-color: lightpink;
+}
+
+.cardsFoodOptions{
+  background-color:lightsteelblue;
+}
+
+.venueCard{
+width: 600px;
+display:inline-block;
 }

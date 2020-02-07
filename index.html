@@ -10,7 +10,7 @@
   <!-- Compiled and minified CSS -->
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
+<link href=“https://fonts.googleapis.com/icon?family=Material+Icons” rel=“stylesheet”>
 <title>UCI Eats</title>
 </head>
 <body>
@@ -70,14 +70,13 @@
       <div class="container">
       <div class="input-field col s12">
         <select id="selectRadius">
-           <option value="" disabled selected>Choose a radius</option>
-          <option value="1">1</option>
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
+          <option value="1609.34">1</option>
+          <option value="8046.72">5</option>
+          <option value="16093.4">10</option>
+          <option value="24140.2">15</option>
+          <option value="32186.9">20</option>
         </select>
-        <label>Radius</label>
+        <label>Radius in Miles</label>
       </div>
 
       </div>
@@ -86,7 +85,7 @@
        <div class="col l12">
          <input type="text" id="cityName" 
          placeholder="Please Enter A City">
-        <input type="text" id="zipCode" placeholder="Please Enter in Zip Code">
+        
          <button class="btn waves-effect waves-light blue-grey darken-1" type="submit" name="action" id="search">
            <i class="material-icons right">search</i>
          </button>
@@ -98,19 +97,21 @@
   </div>
 
   <div class="row">
-  <div class="col s12" id="weather">Weather Results</div>
+  <section class="col s12" id="weather"></section>
   </div>
   <div class="row">
-  <div class="col s6" id="activity"></div>
-  <div class="col s6" id="foodOptions">Food Options Results</div>
+  <section class="col s6" id="choices">
+      <div id="activities"></div>
+      <div id="foodType"></div>
+  </section>
+  <section class="col s6" id="decided">
+    <div id="activitiesPicked"><h1>Activities Picked</h1></div>
+    <div id="foodTypePicked"><h1>Food Options Picked</h1></div>
+  </section>
   </div>
   
 
-<div id="activities">Activities</div>
-<div id="foodType">FoodType</div>
-<div id="city">city</div>
-<div id="zipCode">Zip</div>
-<div id="btnShowChoices"></div>
+
 
 
 <div id="resultActivities"></div>
