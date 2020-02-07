@@ -84,19 +84,19 @@ const searchItem = () => {
   let foodTargetDiv = document.getElementById('foodType')
 
   //Pull and Display
-  if (ArtsAndEntertainmentIds.length > 1) {
+  if (ArtsAndEntertainmentIds.length > 0 && ArtsAndEntertainmentIds[0] !== '') {
     getVenuesTopTen('Arts and Entertainment', ArtsAndEntertainmentIds, rad, 'cardsArtAndEntertainment', activitiesTargetDiv)
   }
-  if (EventsIds.length > 1) {
+  if (EventsIds.length > 0 && EventsIds[0] !== '') {
     getVenuesTopTen('Events', EventsIds, rad, 'cardsEvents', activitiesTargetDiv)
   }
-  if (OutdoorsAndRecreationIds.length > 1) {
+  if (OutdoorsAndRecreationIds.length > 0 && OutdoorsAndRecreationIds[0] !== '') {
     getVenuesTopTen('Outdoors and Recreation', OutdoorsAndRecreationIds, rad, 'cardsOutdoorsAndRecreation', activitiesTargetDiv)
   }
-  if (TravelAndTransportIds.length > 1) {
+  if (TravelAndTransportIds.length > 0 && TravelAndTransportIds[0] !== '') {
     getVenuesTopTen('Travel and Transport', TravelAndTransportIds, rad, 'cardsTravelAndTransport', activitiesTargetDiv)
   }
-  if (foodIds.length > 1) {
+  if (foodIds.length > 0 && foodIds[0] !== '') {
     getVenuesTopTen('Food Options', foodIds, rad, 'cardsFoodOptions', foodTargetDiv)
   }
 }
@@ -107,7 +107,7 @@ const getVenuesTopTen = (display, criteriaId, rad, divClass, resultDiv) => {
   //criteriaId comes in as an array of id's and have to convert array to string
   let categoryList = criteriaId.join()
   let category = '&categoryId=' + categoryList
-  let searchURL = fourSQMainURL + 'search?near=' + geoCode + category + '&radius=' + rad + '&' + urlFourSQClientInfo
+  let searchURL = fourSQMainURL + 'search?ll=' + geoCode + category + '&radius=' + rad + '&' + urlFourSQClientInfo
 
   console.log(searchURL)
   fetch(searchURL)
