@@ -6,6 +6,7 @@ const fourSQPathCat = '/categories?'
 const urlFourSQClientInfo = `client_id=${fourSQClientID}&client_secret=${fourSQclientSecret}&v=20200203`
 
 const fourSQMainURL = fourSQbaseURL + fourSQVenuePath
+document.getElementById('cityName').value = "Irvine"
 
 const activityArtsAndEntertainmentId = '4d4b7104d754a06370d81259'
 const activityEventId = '4d4b7105d754a06373d81259'
@@ -55,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-const searchItems = () => {
+const searchItem = () => {
 
   let instanceArtsAndEntertainment = M.FormSelect.getInstance(selectArtsAndEntertainment);
   let ArtsAndEntertainmentIds = instanceArtsAndEntertainment.getSelectedValues()
@@ -83,16 +84,21 @@ const searchItems = () => {
   let foodTargetDiv = document.getElementById('foodType')
 
   //Pull and Display
-  getVenuesTopTen('Arts and Entertainment', ArtsAndEntertainmentIds, rad, 'cardsArtAndEntertainment', activitiesTargetDiv)
-
-  getVenuesTopTen('Events', EventsIds, rad, 'cardsEvents', activitiesTargetDiv)
-
-  getVenuesTopTen('Outdoors and Recreation', OutdoorsAndRecreationIds, rad, 'cardsOutdoorsAndRecreation', activitiesTargetDiv)
-
-  getVenuesTopTen('Travel and Transport', TravelAndTransportIds, rad, 'cardsTravelAndTransport', activitiesTargetDiv)
-
-  getVenuesTopTen('Food Options', foodIds, rad, 'cardsFoodOptions', foodTargetDiv)
-
+  if (ArtsAndEntertainmentIds.length > 1) {
+    getVenuesTopTen('Arts and Entertainment', ArtsAndEntertainmentIds, rad, 'cardsArtAndEntertainment', activitiesTargetDiv)
+  }
+  if (EventsIds.length > 1) {
+    getVenuesTopTen('Events', EventsIds, rad, 'cardsEvents', activitiesTargetDiv)
+  }
+  if (OutdoorsAndRecreationIds.length > 1) {
+    getVenuesTopTen('Outdoors and Recreation', OutdoorsAndRecreationIds, rad, 'cardsOutdoorsAndRecreation', activitiesTargetDiv)
+  }
+  if (TravelAndTransportIds.length > 1) {
+    getVenuesTopTen('Travel and Transport', TravelAndTransportIds, rad, 'cardsTravelAndTransport', activitiesTargetDiv)
+  }
+  if (foodIds.length > 1) {
+    getVenuesTopTen('Food Options', foodIds, rad, 'cardsFoodOptions', foodTargetDiv)
+  }
 }
 
 const getVenuesTopTen = (display, criteriaId, rad, divClass, resultDiv) => {
@@ -103,7 +109,7 @@ const getVenuesTopTen = (display, criteriaId, rad, divClass, resultDiv) => {
   let category = '&categoryId=' + categoryList
   let searchURL = fourSQMainURL + 'search?near=' + geoCode + category + '&radius=' + rad + '&' + urlFourSQClientInfo
 
-
+  console.log(searchURL)
   fetch(searchURL)
     .then(r => r.json())
     .then(data => {
@@ -285,11 +291,13 @@ const renderForecastCard = (cardData) => {
 document.getElementById('search').addEventListener('click', event => {
   event.preventDefault()
   let city = document.getElementById('cityName').value
-  let urlWeather = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=3c181a9afca27b382c5754bb9706b06f`
-  searchByCity(city, urlWeather)
 
-  searchItems()
+  if (city !== '') {
+    let urlWeather = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=3c181a9afca27b382c5754bb9706b06f`
+    searchByCity(city, urlWeather)
 
+    searchItem()
+  }
 })
 
 
