@@ -100,7 +100,7 @@ const searchItem = () => {
     getVenues('Food Options', foodIds, rad, 'cardsFoodOptions', foodTargetDiv, 'foodTypePicked')
   }
   if (ShopAndServiceIds.length > 0 && ShopAndServiceIds[0] !== '') {
-    getVenues('Shops And Services', ShopAndServiceIds, rad, 'cardsShopAndService', shopsAndServiceTargetDiv, 'shopAndServicePicked')
+    getVenues('Shops And Services', ShopAndServiceIds, rad, 'cardsShopAndService', activitiesTargetDiv, 'activitiesPicked')
   }
 
 }
