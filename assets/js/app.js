@@ -139,6 +139,19 @@ const getVenues = (display, criteriaId, rad, divClass, resultDiv, targetList) =>
 
 }
 
+const getVenueDetails = (venueId) => {
+  let venueURL = `https://api.foursquare.com/v2/venues/${venueId}?${urlFourSQClientInfo}`
+  fetch(venueURL)
+    .then(r => r.json())
+    .then(data => {
+      let shortURL = (data.response.venue.shortUrl).replace('http://', 'https://')
+      window.open(shortURL, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes')
+        ;
+
+    })
+    .catch(e => console.error(e))
+}
+
 //This is based off passing through a venue object from 4 square
 const createVenueCard = (venueItem, display, targetList, divClass) => {
   let { id, name, location, categories, referralId, hasPerk } = venueItem
@@ -162,6 +175,7 @@ const createVenueCard = (venueItem, display, targetList, divClass) => {
         </div>
         <div class="card-action">
           <button class="btn waves-effect waves-light addVenue" value='${id}'>Add Venue</button>
+          <button class="btn waves-effect waves-light detailVenue" value='${id}'>Show Details</button>
         </div>
 
       </div>
@@ -311,7 +325,14 @@ document.getElementById('search').addEventListener('click', event => {
   }
 })
 
+
+
 document.addEventListener('click', event => {
+  if (event.target.classList.contains('detailVenue')) {
+    let detailVenueId = event.target.value
+    getVenueDetails(detailVenueId)
+  }
+
   if (event.target.classList.contains('addVenue')) {
     event.target.parentNode.parentNode.remove()
     let addVenueId = event.target.value
