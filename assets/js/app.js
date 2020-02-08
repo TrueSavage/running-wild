@@ -352,6 +352,7 @@ document.addEventListener('click', event => {
             </div>
             <div class="card-action">
               <button class="btn waves-effect waves-light removeVenue" value=${addVenue.venueId}>Remove Venue</button>
+              <button class="btn waves-effect waves-light detailVenue" value='${addVenue.venueId}'>Show Details</button>
             </div>
         `
     document.getElementById(addVenue.targetList).append(venueElem)
