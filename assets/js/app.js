@@ -21,6 +21,7 @@ let fiveDayForecast
 let fiveDay = []
 let browserGeolocation = ''
 let venueItems = []
+let venueWatchList = []
 let geoCode = localStorage.getItem('geoCode') || '33.68687203696294,-117.788172854784'
 let selectArtsAndEntertainment = document.getElementById('mArtsAndEntertainment')
 let selectEvents = document.getElementById('mEvents')
@@ -29,6 +30,7 @@ let selectOutdoorsAndRecreation = document.getElementById('mOutdoorsAndRecreatio
 let selectFoodOptions = document.getElementById('mFoodOptions')
 let selectTravelAndTransport = document.getElementById('mTravelAndTransport')
 
+let resultSummary = document.getElementById('resultSummary')
 
 const fourSQGeo = () => {
   if (navigator.geolocation) {
@@ -127,7 +129,7 @@ const getVenues = (display, criteriaId, rad, divClass, resultDiv, targetList) =>
       div.append(subTitle)
 
       venueArray.forEach((item) => {
-        let newCard = createVenueCard(item, display, targetList)
+        let newCard = createVenueCard(item, display, targetList, divClass)
         div.append(newCard)
       })
       resultDiv.append(div)
@@ -138,17 +140,17 @@ const getVenues = (display, criteriaId, rad, divClass, resultDiv, targetList) =>
 }
 
 //This is based off passing through a venue object from 4 square
-const createVenueCard = (venueItem, display, targetList) => {
+const createVenueCard = (venueItem, display, targetList, divClass) => {
   let { id, name, location, categories, referralId, hasPerk } = venueItem
 
-  let { address, city, state, postalCode, country, formattedAddress } = location
+  let { address, city, state, postalCode, country, formattedAddress, lat, lng } = location
   let formattedAddressStr = ''
   formattedAddress.forEach((element) => {
     formattedAddressStr += element + '<br>'
   })
   let venueCard = document.createElement('div')
   venueCard.classList.add("venueCard")
-  let venueElement = { venueId: id, name: name, formattedAddressStr: formattedAddressStr, formattedAddress: formattedAddress, heading: display, targetList: targetList }
+  let venueElement = { venueId: id, name: name, formattedAddressStr: formattedAddressStr, formattedAddress: formattedAddress, heading: display, targetList: targetList, latitude: lat, longitude: lng, divClass: divClass }
   venueItems.push(venueElement)
   venueCard.innerHTML =
     `  <div class="row">
@@ -226,6 +228,7 @@ const kelvinToF = (valNum) => {
 }
 
 const searchByCity = (city, urlWeather) => {
+  venueItems = []
   fetch(urlWeather)
     .then(r => r.json())
     .then(response => {
@@ -318,6 +321,7 @@ document.addEventListener('click', event => {
         addVenue = element
       }
     })
+    venueWatchList.push(addVenue)
     let venueElem = document.createElement('div')
     venueElem.className = 'card'
     venueElem.innerHTML = `
@@ -326,11 +330,109 @@ document.addEventListener('click', event => {
               <h4>${addVenue.formattedAddressStr}</h4>              
             </div>
             <div class="card-action">
-              <button class="btn waves-effect waves-light removeVenue">Remove Venue</button>
+              <button class="btn waves-effect waves-light removeVenue" value=${addVenue.venueId}>Remove Venue</button>
             </div>
         `
     document.getElementById(addVenue.targetList).append(venueElem)
   } else if (event.target.classList.contains('removeVenue')) {
+    venueWatchList.forEach((element) => {
+      if (element.venueId === event.target.value) {
+        venueWatchList.pop(element)
+      }
+    })
     event.target.parentNode.parentNode.remove()
   }
 })
+
+document.getElementById('processVenue').addEventListener('click', event => {
+  let ArtsAndEntertainment = []
+  let Events = []
+  let ShopsAndServices = []
+  let OutdoorsAndRecreation = []
+  let TravelAndTransport = []
+  let FoodOptions = []
+  venueWatchList.forEach((element) => {
+    switch (element.heading) {
+      case 'Arts and Entertainment':
+        ArtsAndEntertainment.push(element)
+        break
+      case 'Events':
+        Events.push(element)
+        break
+      case 'Shops And Services':
+        ShopsAndServices.push(element)
+        break
+      case 'Outdoors and Recreation':
+        OutdoorsAndRecreation.push(element)
+        break
+      case 'Travel and Transport':
+        TravelAndTransport.push(element)
+        break
+      case 'Food Options':
+        FoodOptions.push(element)
+        break
+      default:
+        break
+    }
+
+  })
+
+  resultSummary.innerHTML = ''
+  let SummaryTitle = document.createElement('h1')
+  SummaryTitle.textContent = 'Summary'
+  SummaryTitle.classList.add('summaryTitle')
+  resultSummary.append(SummaryTitle)
+
+  if (ArtsAndEntertainment.length > 0) {
+    createSummarySection(ArtsAndEntertainment, resultSummary)
+  }
+  if (Events.length > 0) {
+    createSummarySection(Events, resultSummary)
+  }
+  if (ShopsAndServices.length > 0) {
+    createSummarySection(ShopsAndServices, resultSummary)
+  }
+  if (OutdoorsAndRecreation.length > 0) {
+    createSummarySection(OutdoorsAndRecreation, resultSummary)
+  }
+  if (TravelAndTransport.length > 0) {
+    createSummarySection(TravelAndTransport, resultSummary)
+  }
+  if (FoodOptions.length > 0) {
+    createSummarySection(FoodOptions, resultSummary)
+  }
+
+})
+
+const createSummarySection = (arrayElement, resultSum) => {
+  let newLine1 = document.createElement('br')
+  resultSum.append(newLine1)
+  let generalSubHead = document.createElement('div')
+  generalSubHead.classList.add(arrayElement[0].divClass)
+  let generalSubTitle = document.createElement('h2')
+  generalSubTitle.textContent = arrayElement[0].heading
+  resultSum.append(generalSubTitle)
+  arrayElement.forEach((element) => {
+    let newCard = addCardSummary(element)
+    generalSubHead.append(newCard)
+  })
+  resultSum.append(generalSubHead)
+}
+
+const addCardSummary = (item) => {
+  let venueCard = document.createElement('div')
+  venueCard.classList.add("venueCard")
+  venueCard.innerHTML =
+    `  <div class="row">
+       <div class="col s12 m6">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">${item.name}</span>
+          ${item.formattedAddressStr}
+        </div>
+      </div>
+    </div>
+  </div>
+`
+  return venueCard
+}
