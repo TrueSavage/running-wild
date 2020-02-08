@@ -82,7 +82,7 @@ const searchItem = () => {
 
   let activitiesTargetDiv = document.getElementById('activities')
   let foodTargetDiv = document.getElementById('foodType')
-
+  let shopAndServiceTargetDiv = document.getElementById('shopAndServicePicked')
   //Pull and Display
   if (ArtsAndEntertainmentIds.length > 0 && ArtsAndEntertainmentIds[0] !== '') {
     getVenues('Arts and Entertainment', ArtsAndEntertainmentIds, rad, 'cardsArtAndEntertainment', activitiesTargetDiv, 'activitiesPicked')
@@ -99,7 +99,13 @@ const searchItem = () => {
   if (foodIds.length > 0 && foodIds[0] !== '') {
     getVenues('Food Options', foodIds, rad, 'cardsFoodOptions', foodTargetDiv, 'foodTypePicked')
   }
+  if (ShopAndServiceIds.length > 0 && ShopAndServiceIds[0] !== '') {
+    getVenues('Shops And Services', ShopAndServiceIds, rad, 'cardsShopAndService', shopsAndServiceTargetDiv, 'shopAndServicePicked')
+  }
+
 }
+//  let instanceShopAndService = M.FormSelect.getInstance(selectShopAndService);
+// let ShopAndServiceIds = instanceShopAndService.getSelectedValues()
 
 const getVenues = (display, criteriaId, rad, divClass, resultDiv, targetList) => {
 
@@ -280,8 +286,8 @@ const renderForecastCard = (cardData) => {
   let forecastDay = moment(dt_txt).format('MM/DD/YYYY')
 
   newForecastCard.innerHTML = `<div class="card forecastCard">
-  <div class="card-body">
-  <div class="card-title"><h4>${forecastDay}  </h4> <img src='https://openweathermap.org/img/wn/${weather[0].icon}@2x.png'> </div>
+  <div class="card-body card-text">
+  <div class="card-title"><h6>${forecastDay}  </h6> <img src='https://openweathermap.org/img/wn/${weather[0].icon}@2x.png'> </div>
       <br> Temperature: ${kelvinToF(main.temp)} &#8457;
       <br>Humidity: ${main.humidity}% 
       <br>Wind Speed: ${wind.speed} MPH 

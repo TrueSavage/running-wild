@@ -13,6 +13,7 @@ img {
   display: inline-block;
   font-weight: bold;
   padding: 0px;
+  width: 
 }
 
 .forecastCard {
@@ -43,4 +44,10 @@ img {
 .venueCard{
 width: 600px;
 display:inline-block;
+}
+
+.card-text {
+  text-align: center;
+  padding: 10px;
+  
 }
